@@ -1,16 +1,22 @@
 <template>
     <div id="srctag">
-        <navigation />
-
+        
     </div>    
 </template>
 
 <script>
-    import navigation from '../components/Navigation/Navigation.vue';
+    import sudoku from '../assets/sudoku.js'
 
     export default{
-        components:{
-            navigation,
+        data(){
+            return{
+                difficulty: [20, 29, 38, 47, 56, 64],
+            }
+        },
+        mounted(){
+            let board = new sudoku(9, this.difficulty[2]);
+            board.createboard();
+            board.printgrid();
         }
     }
 </script>

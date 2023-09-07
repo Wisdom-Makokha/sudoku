@@ -1,10 +1,23 @@
-:root
-{
-    background-color: #D7E6FB;
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 1em;
 }
 
-template> div > div
+html{
+    font-size: 62.5%
+}
+
+:root
 {
-    margin-left: 15.625%;
-    margin-right: 15.625%;
+    background-color: #e2eeff;
+}
+
+.logo-text{
+    font-family: 'Tektur', cursive; 
+}
+
+.header-text{
+    font-family: 'Neucha', cursive;
 }
