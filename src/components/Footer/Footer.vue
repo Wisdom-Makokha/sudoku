@@ -1,5 +1,7 @@
 <template>
-  
+  <div id="footer" class="row-flex">
+    
+  </div>
 </template>
 
 <script>

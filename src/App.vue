@@ -9,14 +9,16 @@
 </script>
 
 <template>
-    <div id="sudokuapp">
+    <div >
         <navbar/>
-        <router-view></router-view>
+        <router-view id="sudokuapp"></router-view>
     </div>
 </template>
 
 <style scoped>
 #sudokuapp{
-    margin: 0
+    background-color: #6783ab8d;
+    margin: 28px 10%;
+    border-radius: 12px
 }
 </style>

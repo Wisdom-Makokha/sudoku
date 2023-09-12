@@ -1,0 +1,127 @@
+.flex-column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-position {
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+#form-heading {
+    text-align: center;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}
+
+.form-container {
+    width: 80%;
+    background-color: #cde2ff9c;
+    padding: 23px 12%;
+    margin: 40px 0;
+    border-radius: 10px;
+    border: 1px solid #02214d79;
+    box-shadow: 0 0 5px 1px rgb(74, 74, 74);
+}
+
+.form-item {
+    margin: 12px 2px;
+    align-items: start;
+    width: 100%;
+}
+
+.input-text-field {
+    font-size: 180%;
+    border: 2px solid black;
+    border-radius: 5px;
+    height: 2.5em;
+    width: 100%;
+    padding: 5px;
+    transition-property: border, outline;
+    transition-duration: 0.1s;
+
+}
+
+.input-text-field:hover {
+    border: 2px solid rgb(39, 106, 252);
+    outline: 2px solid rgb(39, 106, 252);
+}
+
+.input-text-field:focus-within,
+.input-text-field:focus-visible {
+    border: 1px solid rgb(39, 106, 252);
+    outline: thick double rgb(39, 106, 252);
+}
+
+.header-text {
+    font-family: 'Neucha', cursive;
+    font-size: 250%;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    padding: 12px 6px;
+}
+
+.form-button {
+    font-size: 185%;
+    padding: 2.8px 6px;
+    border: 2px solid black;
+    border-radius: 4px;
+    background-color: rgb(105, 162, 252);
+    transition-property: background-color;
+    transition-duration: 0.4s;
+}
+
+.submit-button:hover {
+    background-color: #ffbf00;
+}
+
+.cancel-button:hover {
+    background-color: rgb(249, 69, 69);
+}
+
+.form-button:active {
+    background-color: white;
+}
+
+.form-route-container {
+    text-align: center;
+    width: fit-content;
+    overflow: hidden;
+    height: 3em;
+}
+
+.form-route {
+    color: rgb(0, 6, 25);
+    text-decoration: none;
+    font-family: 'Neucha', cursive;
+    font-size: 200%;
+    transition-property: color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in;
+}
+
+.animated-line {
+    height: 0;
+    width: 5%;
+    border-top: 1px solid rgb(0, 6, 25);
+    border-bottom: 1px solid rgb(0, 6, 25);
+    transition-property: width, border-color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in;
+}
+
+.form-route-container:hover>.form-route {
+    color: rgb(36, 108, 250);
+}
+
+.form-route-container:hover>.animated-line {
+    transition-duration: 1.2s;
+    width: 100%;
+    border-color: rgb(36, 108, 250);
+}
