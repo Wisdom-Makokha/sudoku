@@ -17,6 +17,9 @@
                     <div class="dropdown-route-container">
                         <router-link to="/login" id="login" class="route route-text" title="login">Login</router-link>
                     </div>
+                    <div class="dropdown-route-container">
+                        <a class="route route-text" title="logout" @click="userlogout">Logout</a>
+                    </div>
                 </div>
             </div> 
             <div class="route-container">
@@ -36,4 +39,29 @@
 
 <script>
 import './Assets/navigationstyles.css'
+import axios from 'axios'
+
+export default {
+    data (){
+        return {
+            baseURL: 'http://127.0.0.1:8000/api',
+            errors: [],
+            checklogin: localStorage.getItem("logintoken") ? true : false,
+        }
+    },
+    methods: {
+        async userlogout(){
+            try {
+                const response = await axios.post(this.baseURL + '/userLogout');
+                console.log(response.data.message);
+
+                localStorage.removeItem("logintoken");
+
+            } catch(error) {
+                this.errors.push(error);
+                this.$router.push("/")
+            }
+        }
+    }
+}
 </script>

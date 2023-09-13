@@ -26,6 +26,7 @@
     transition-property: color;
     transition-duration: 0.7s;
     transition-timing-function: ease-in-out;
+    cursor: pointer;
 }
 
 .route-container:hover>.route,

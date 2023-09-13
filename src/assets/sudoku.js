@@ -8,7 +8,8 @@ class Sudoku {
         const sqsize = Math.sqrt(size);
         this.squaresize = Math.floor(sqsize);
 
-        this.sudokugrid = Array.from({ length: size }, () => Array.from({ length: size }, () => 0));
+        this.sudokugrid = Array.from({length: size}, () => Array.from({length: size}, () => 0));
+        // this.completegrid = Array.from({length: size}, () => Array.from({length: size}, () => 0));
     }
 
     //function to create a board
@@ -67,7 +68,7 @@ class Sudoku {
 
 
     ////checks if the number is compatible in row, column and square
-    //returns true if the number is in square and false if otherwise
+    //returns true if the number is not in row, column or square and false if otherwise
     checkifsafe(row, column, number) {
         if (!this.checkinrow(row, number) &&
             !this.checkincolumn(column, number) &&
@@ -192,11 +193,82 @@ class Sudoku {
             console.log(this.sudokugrid[i].join(" "));
     }
 
+    //function to remove the zeroes that are in the grid converting them to undefined value for the blank space in the grid
     removezeroes(){
         for(let i = 0; i < this.size; i++)
             for(let j = 0; j < this.size; j++)
-                if(this.sudokugrid[i][j] == 0)
+                if(this.sudokugrid[i][j] === 0)
                     this.sudokugrid[i][j] = undefined;
+    }
+
+    checkassignmentvalid(row, column, number)
+    {
+        if(this.checkaxisvalid(row, column, number, true) &&
+            this.checkaxisvalid(row, column, number, false) &&
+                this.checksquarevalid(row, column, number))
+                {
+                    console.log("Point assignment is valid!!");
+                    return true;
+                }
+        else
+        {
+            console.log("Point assignment not valid!!");
+            return false;
+        }
+    }
+
+    checkaxisvalid(row, column, number, rowmain)
+    {
+        if(rowmain === true)
+        {
+            for(let i = 0; i < this.size; i++)
+            {
+                if(column === i)
+                    continue;
+
+                if(number === this.sudokugrid[row][i])
+                    return false;
+            }
+
+            console.log(number);
+
+            return true;
+        }
+        else
+        {
+            for(let i = 0; i < this.size; i++)
+            {
+                if(row === i)
+                    continue;
+
+                if(number === this.sudokugrid[i][column])
+                    return false;
+            }
+
+            console.log(number);
+
+            return true;
+        }
+    }
+
+    checksquarevalid(row, column, number)
+    {
+        let rowstart = row - (row % 3);
+        let columnstart = column - (column % 3);
+
+        for(let i = 0; i < this.squaresize; i++)
+            for(let j = 0; j < this.squaresize; j++)
+            {
+                if((rowstart + i) === row && (columnstart + i) === column)
+                    continue;
+
+                if(number === this.sudokugrid[i][j])
+                    return false;
+            }
+
+            console.log(number);
+
+        return true;
     }
 }
 
