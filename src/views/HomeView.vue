@@ -3,7 +3,7 @@
         <div class="home-view flex-center">
             <div class="difficulty-selection flex-center">
                 <div class="option-container flex-center">
-                    <input type="radio" id="easy" name="difficulty" value="0" checked @click="setdifficulty(0)"/>
+                    <input type="radio" id="easy" name="difficulty" value="0" checked @click="setdifficulty(0)" />
                     <label for="easy">Easy</label>
                 </div>
                 <div class="option-container flex-center">
@@ -31,12 +31,23 @@
                 <div class="table">
                     <div class="row flex-center" v-for="row in boardsize" :key="row">
                         <div class="column flex-center" v-for="column in boardsize" :key="column">
-                            <span class="cell"><input type="text" maxlength="1" class="grid-cell cell-transition" 
+                            <span class="cell"><input type="text" maxlength="1" class="grid-cell cell-transition"
                                     @input="validatevalue(row, column)"
                                     v-model="board.sudokugrid[row - 1][column - 1]"></span>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="timer-container flex-center">
+                <span id="minutes" class="header-text time-unit">{{ minutes }}</span>
+                <span class="header-text">:</span>
+                <span id="seconds" class="header-text time-unit">{{ seconds }}</span>
+                <button id="startbutton" @click="starttimer" class="button" :disabled="timer">
+                    <span class="material-symbols-outlined">play_circle</span>
+                </button>
+                <button id="stopbutton" @click="stoptimer" class="button" :disabled="nottimer">
+                    <span class="material-symbols-outlined">pause_circle</span>
+                </button>
             </div>
         </div>
     </div>
@@ -55,7 +66,13 @@ export default {
             string: "",
             boardsize: 9,
             board: () => new sudoku(this.boardsize, this.difficulty[5]),
-            numberregex: new RegExp(/[1-9]/)
+            numberregex: new RegExp(/[1-9]/),
+            checklogin: localStorage.getItem("logintoken") ? true : false,
+            minutes: 0,
+            seconds: 0,
+            totaltime: 0,
+            timer: true,
+            nottimer: false,
         }
     },
     created() {
@@ -78,25 +95,39 @@ export default {
             let value = this.board.sudokugrid[row - 1][column - 1];
 
             if (!this.numberregex.test(value))
-            {
                 this.board.sudokugrid[row - 1][column - 1] = undefined;
-                return;
-            }
-            
-            if(!this.board.checkassignmentvalid(row - 1, column - 1, value))
-            {
+
+            value = parseInt(value);
+
+            if (!this.board.checkassignmentvalid(row - 1, column - 1, value)) {
                 gridcell[0].classList.remove("cell-transition");
                 gridcell[0].classList.add("cell-error");
             }
-            else if(gridcell[0].classList.contains("cell-error"))
-            {
+            else if (gridcell[0].classList.contains("cell-error")) {
                 gridcell[0].classList.remove("cell-error");
                 gridcell[0].classList.add("cell-transition");
             }
+        },
+        stopwatch() {
+            if (this.timer) {
+                this.seconds++;
+                this.totaltime++;
+                if (this.seconds === 60) {
+                    this.minutes++;
+                    this.seconds = 0;
+                }
 
-            console.log(gridcell[0].classList.contains("cell-error"));
-
-            console.log(gridcell[0].value)
+                setTimeout(this.stopwatch, 1000)
+            }
+        },
+        starttimer() {
+            this.timer = true;
+            this.nottimer = false;
+            this.stopwatch();
+        },
+        stoptimer() {
+            this.timer = false;
+            this.nottimer = true;
         }
     },
     mounted() {
@@ -104,6 +135,7 @@ export default {
 
         let k;
 
+        //this loop sets all the preset numbers to readonly to prevent them from changing 
         for (let i = 0; i < gridcells.length; i++) {
             if (gridcells[i].value >= 1 && gridcells[i] <= 9)
                 gridcells[i].setAttribute("readonly", "");
@@ -113,10 +145,11 @@ export default {
             for (let j = 1; j <= this.boardsize; j++, k++)
                 gridcells[k].classList.add("row-" + i, "column-" + j)
         }
+
+        this.stopwatch();
     }
 }
 </script>
 
 
-<style scoped>
-</style>
+<style scoped></style>

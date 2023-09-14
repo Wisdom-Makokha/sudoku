@@ -23,7 +23,7 @@
                 </div>
             </div> 
             <div class="route-container">
-                <router-link to="/rules" id="rules" class="route route-text" title="rules">Rules</router-link>
+                <router-link to="/rules" id="rules" class="route route-text" title="rules">Rules & tips</router-link>
             </div>
             <div class="route-container">
                 <router-link to="/about" id="about" class="route route-text" title="about">About</router-link>

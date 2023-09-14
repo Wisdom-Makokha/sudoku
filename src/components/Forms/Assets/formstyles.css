@@ -12,8 +12,9 @@
 
 #form-heading {
     text-align: center;
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
+    border: 2px solid #02214d79;
+    border-radius: 10px;
+    background-color: rgba(0, 33, 71, 0.346)
 }
 
 .form-container {
@@ -53,11 +54,6 @@
 .input-text-field:focus-visible {
     border: 1px solid rgb(39, 106, 252);
     outline: thick double rgb(39, 106, 252);
-}
-
-.header-text {
-    font-family: 'Neucha', cursive;
-    font-size: 250%;
 }
 
 .button-group {
