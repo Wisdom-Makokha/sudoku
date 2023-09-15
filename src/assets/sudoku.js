@@ -8,7 +8,7 @@ class Sudoku {
         const sqsize = Math.sqrt(size);
         this.squaresize = Math.floor(sqsize);
 
-        this.sudokugrid = Array.from({length: size}, () => Array.from({length: size}, () => 0));
+        this.sudokugrid = Array.from({ length: size }, () => Array.from({ length: size }, () => 0));
     }
 
     //function to create a board
@@ -170,49 +170,57 @@ class Sudoku {
     }
 
     //function to convert a string received from the server to a grid, this is to resume an unfinished game
-    stringtogrid(sudokustring)
-    {
+    stringtogrid(sudokustring) {
         let k = 0;
-        for(let i = 0; i < this.size; i++)
-            for(let j = 0; j < this.size; j++, k++)
+        for (let i = 0; i < this.size; i++)
+            for (let j = 0; j < this.size; j++, k++)
                 this.sudokugrid[i][j] = parseInt(sudokustring[k]);
+
+        this.removezeroes();
     }
 
     //function to convert the current board into a string and send it to the server
-    gridtostring()
-    {
+    gridtostring() {
+        this.addzeroes();
         let sudokustring = this.sudokugrid.toString();
         sudokustring = sudokustring.replaceAll(",", "");
+        this.removezeroes();
         return sudokustring;
     }
 
     //console function to look at the grid
-    printgrid(){
+    printgrid() {
         for (let i = 0; i < this.size; i++)
             console.log(this.sudokugrid[i].join(" "));
     }
 
     //function to remove the zeroes that are in the grid converting them to undefined value for the blank space in the grid
-    removezeroes(){
-        for(let i = 0; i < this.size; i++)
-            for(let j = 0; j < this.size; j++)
-                if(this.sudokugrid[i][j] === 0)
+    removezeroes() {
+        for (let i = 0; i < this.size; i++)
+            for (let j = 0; j < this.size; j++)
+                if (this.sudokugrid[i][j] === 0)
                     this.sudokugrid[i][j] = undefined;
     }
 
+    //function to add zeroes to send to the backend
+    addzeroes() {
+        for (let i = 0; i < this.size; i++)
+            for (let j = 0; j < this.size; j++)
+                if (this.sudokugrid[i][j] === undefined)
+                    this.sudokugrid[i][j] = 0;
+    }
+
+
     //this function combines two other functions to check whether it is okay to input a number into a row, column or square
     //it returns true if it is valid and false if otherwise
-    checkassignmentvalid(row, column, number)
-    {
-        if(this.checkaxisvalid(row, column, number, true) &&
+    checkassignmentvalid(row, column, number) {
+        if (this.checkaxisvalid(row, column, number, true) &&
             this.checkaxisvalid(row, column, number, false) &&
-                this.checksquarevalid(row, column, number))
-                {
-                    // console.log("Point assignment is valid!!");
-                    return true;
-                }
-        else
-        {
+            this.checksquarevalid(row, column, number)) {
+            // console.log("Point assignment is valid!!");
+            return true;
+        }
+        else {
             // console.log("Point assignment not valid!!");
             return false;
         }
@@ -220,29 +228,24 @@ class Sudoku {
 
     //this function checks whether a number entry at a point in a row or column is valid or not
     //it returns true if it is valid and false if otherwise
-    checkaxisvalid(row, column, number, rowmain)
-    {
-        if(rowmain)
-        {
-            for(let i = 0; i < this.size; i++)
-            {
-                if(i === column)
+    checkaxisvalid(row, column, number, rowmain) {
+        if (rowmain) {
+            for (let i = 0; i < this.size; i++) {
+                if (i === column)
                     continue;
-                
-                if(this.sudokugrid[row][i] === number)
+
+                if (this.sudokugrid[row][i] === number)
                     return false
             }
 
             return true;
         }
-        else
-        {
-            for(let i = 0; i < this.size; i++)
-            {
-                if(i === row)
+        else {
+            for (let i = 0; i < this.size; i++) {
+                if (i === row)
                     continue;
-                
-                if(this.sudokugrid[i][column] === number)
+
+                if (this.sudokugrid[i][column] === number)
                     return false;
             }
 
@@ -252,29 +255,27 @@ class Sudoku {
 
     //this function checks whether a number entry at a point in a square is valid or not
     //it returns true if it is valid and false if otherwise
-    checksquarevalid(row, column, number)
-    {
+    checksquarevalid(row, column, number) {
         let rowstart = row - (row % 3);
         let columnstart = column - (column % 3);
 
-        for(let i = 0; i < this.squaresize; i++)
-            for(let j = 0; j < this.squaresize; j++)
-            {
-                if((rowstart + i) === row && (columnstart + j) === column)
+        for (let i = 0; i < this.squaresize; i++)
+            for (let j = 0; j < this.squaresize; j++) {
+                if ((rowstart + i) === row && (columnstart + j) === column)
                     continue;
 
-                if(this.sudokugrid[rowstart + i][columnstart + j] === number)
+                if (this.sudokugrid[rowstart + i][columnstart + j] === number)
                     return false;
             }
 
         return true;
     }
 
-    checkcomplete()
-    {
-        for(let i = 0; i < this.size; i++)
-            for(let j = 0; j < this.size; j++)
-                if(this.sudokugrid[i][j] === undefined)
+    //this function checks if the board is completely filled
+    checkcomplete() {
+        for (let i = 0; i < this.size; i++)
+            for (let j = 0; j < this.size; j++)
+                if (this.sudokugrid[i][j] === undefined)
                     return false;
 
         return true;
