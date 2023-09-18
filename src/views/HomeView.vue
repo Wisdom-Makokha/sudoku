@@ -7,7 +7,7 @@
                     <label for="easy">Easy</label>
                 </div>
                 <div class="option-container flex-center">
-                    <input type="radio" id="medium" name="difficulty" value="1" @click="setdifficulty(1)" />
+                    <input type="radio" id="medium" name="difficulty" value="1"  @click="setdifficulty(1)" />
                     <label for="medium">Medium</label>
                 </div>
                 <div class="option-container flex-center">
@@ -94,8 +94,8 @@ export default {
     created() {
         //this section initializes the board when the website is created
         this.board = new sudoku(this.boardsize, this.difficulty[0]);
-        
-        if(this.checklogin)
+
+        if (this.checklogin)
             this.getrecentgame();
         else
             this.board.createboard();
@@ -107,7 +107,9 @@ export default {
             this.newlevel = level;
             this.board.createboard();
 
-            if(this.checklogin)
+            console.log(this.checklogin);
+
+            if (this.checklogin)
                 this.createsudoku();
         },
         /**function to validate a value and make sure it is not: 
@@ -132,7 +134,8 @@ export default {
                 gridcell[0].classList.add("cell-transition");
             }
 
-            this.updatesudoku();
+            if(this.checklogin)
+                this.updatesudoku();
         },
         //function for the timer
         stopwatch() {
@@ -155,12 +158,13 @@ export default {
         stoptimer() {
             this.timer = false;
             this.nottimer = true;
-            this.updatesudoku();
+            if(this.checklogin)
+                this.updatesudoku();
         },
         async getrecentgame() {
             try {
-                const response = await axios.get(this.baseURL + "/getRecentGame", {headers: this.headers});
-               
+                const response = await axios.get(this.baseURL + "/getRecentGame", { headers: this.headers });
+
                 this.recentgame = response.data.requestdata;
                 this.board.stringtogrid(this.recentgame.boards);
                 this.newlevel = this.recentgame.difficulty;
@@ -168,37 +172,35 @@ export default {
                 this.seconds = this.totaltime % 60;
                 this.minutes = (this.totaltime - (this.totaltime % 60)) / 60;
                 this.gameid = this.recentgame.id;
-            } catch(error) {
+            } catch (error) {
                 this.errors.push(error);
                 this.board.createboard();
                 this.createsudoku();
             }
         },
-        submitgamedata(){
+        submitgamedata() {
             this.submitgame.boards = this.board.gridtostring();
             this.submitgame.completed = this.board.checkcomplete();
             this.submitgame.time_taken = this.totaltime;
             this.submitgame.difficulty = this.newlevel;
             this.submitgame.id = this.gameid;
         },
-        async createsudoku(){
+        async createsudoku() {
             this.submitgamedata();
 
             try {
-                const response = await axios.post(this.baseURL + '/createSudoku', this.submitgame, {headers: this.headers});
+                const response = await axios.post(this.baseURL + '/createSudoku', this.submitgame, { headers: this.headers });
                 this.gameid = response.data.requestdata.id;
-            } catch(error)
-            {
+            } catch (error) {
                 this.errors.push(error);
             }
         },
-        async updatesudoku(){
+        async updatesudoku() {
             this.submitgamedata();
             try {
-                const response = await axios.put(this.baseURL + '/updateSudoku', this.submitgame, {headers: this.headers});
+                const response = await axios.put(this.baseURL + '/updateSudoku', this.submitgame, { headers: this.headers });
                 // console.log(response.data.requestdata);
-            } catch(error)
-            {
+            } catch (error) {
                 this.errors.push(error);
             }
         }
@@ -218,16 +220,18 @@ export default {
             for (let j = 1; j <= this.boardsize; j++, k++) {
                 gridcells[k].classList.add("row-" + i, "column-" + j)
 
-                // if (!this.board.checkassignmentvalid(row - 1, column - 1, value)) {
-                //     gridcell[0].classList.remove("cell-transition");
-                //     gridcell[0].classList.add("cell-error");
-                // }
-                // else if (gridcell[0].classList.contains("cell-error")) {
-                //     gridcell[0].classList.remove("cell-error");
-                //     gridcell[0].classList.add("cell-transition");
-                // }
+                if (!this.board.checkassignmentvalid(i - 1, j - 1, gridcells[k].value)) {
+                    gridcells[k].classList.remove("cell-transition");
+                    gridcells[k].classList.add("cell-error");
                 }
+                else if (gridcells[k].classList.contains("cell-error")) {
+                    gridcells[k].classList.remove("cell-error");
+                    gridcells[k].classList.add("cell-transition");
+                }
+            }
         }
+
+        
 
         this.stopwatch();
     }

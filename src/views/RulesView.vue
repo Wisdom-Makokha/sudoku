@@ -1,7 +1,7 @@
 <template>
     <div id="rules-page">
         <div class="rules-n-tips-container container">
-            <div class="header-container container rules-n-tips-header-container">
+            <div class="header-container container">
                 <h1 class="header-text">Rules and tips</h1>
             </div>
             <div class="rules-container container">
@@ -47,44 +47,8 @@
 </template>
 
 <script>
-
+import './view_assets/rules_about_styles.css'
 </script>
 
 <style scoped>
-.container{
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-}
-
-.rules-n-tips-container {
-    padding: 50px 3em;
-}
-
-.header-container {
-    margin-top: 10px;
-    width: 100%;
-    border: 2px solid #02214d79;
-    border-radius: 10px;
-    background-color: rgba(0, 33, 71, 0.346);
-    padding: 5px 4em ;
-}
-
-.rules-n-tips-header-container{
-    text-align: center;
-}
-
-.r-n-t-text {
-    padding: 0px 4em
-}
-
-.normal-text {
-    font-size: 200%
-}
-
-.list-item {
-    font-size: 180%;
-    margin: 1em 0;
-    list-style-position: inside;
-}
 </style>

@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+}
+
+.header-container {
+    margin-bottom: 10px;
+    width: 100%;
+    border: 2px solid #02214d79;
+    border-radius: 10px;
+    background-color: rgba(0, 33, 71, 0.346);
+    padding: 5px 4em;
+}
+
+.r-n-t-text {
+    padding: 0px 4em
+}
+
+.normal-text {
+    font-size: 200%
+}
+
+.list-item {
+    font-size: 180%;
+    margin: 1em 0;
+    text-indent: 5%;
+    list-style-position: inside;
+}

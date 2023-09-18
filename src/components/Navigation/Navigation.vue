@@ -7,7 +7,7 @@
             <div class="dropdown-menu route-container">
                 <input type="checkbox" id="dropdown" name="dropdown">
                 <label for="dropdown" class="dropdown-button">
-                    <span class="route route-text">Profile  </span>
+                    <span class="route route-text">{{ username }}</span>
                     <span class="arrow"></span>
                 </label>
                 <div class="dropdown-container">
@@ -16,6 +16,9 @@
                     </div>
                     <div class="dropdown-route-container">
                         <router-link to="/login" id="login" class="route route-text" title="login">Login</router-link>
+                    </div>
+                    <div v-if="checklogin" class="dropdown-route-container">
+                        <router-link to="/boards" title="boards" id="boards" class="route route-text">Boards</router-link>
                     </div>
                     <div class="dropdown-route-container">
                         <a class="route route-text" title="logout" @click="userlogout">Logout</a>
@@ -47,19 +50,23 @@ export default {
             baseURL: 'http://127.0.0.1:8000/api',
             errors: [],
             checklogin: localStorage.getItem("logintoken") ? true : false,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("logintoken")}`,
+                Accept: "application/json"
+            },
+            username: (localStorage.getItem("logintoken") ? true : false) ? localStorage.getItem("sudoku-username") : "Profile"
         }
     },
     methods: {
         async userlogout(){
             try {
-                const response = await axios.post(this.baseURL + '/userLogout');
-                console.log(response.data.message);
-
+                const response = await axios.get(this.baseURL + '/userLogout', { headers: this.headers });
+                console.log(response.data.message, response.data.requestdata);
                 localStorage.removeItem("logintoken");
-
+                localStorage.removeItem("sudoku-username");
+                this.$router.push("/");
             } catch(error) {
                 this.errors.push(error);
-                this.$router.push("/")
             }
         }
     }
