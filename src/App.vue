@@ -21,6 +21,7 @@ export default {
 <style scoped>
 #sudokuapp {
     background-color: #6783ab8d;
+    min-width: 400px;
     min-height: 350px;
     margin: 28px 10%;
     border-radius: 12px;

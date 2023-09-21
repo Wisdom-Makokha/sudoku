@@ -1,5 +1,6 @@
 <template>
     <div>
+        <errorpopup  v-show="newerror" @click="closepopup">{{ errors }}</errorpopup>
         <div class="form-position flex-column-center">
             <div class="form-container flex-column-center">
                 <div class="form-heading">
@@ -33,8 +34,12 @@
 <script>
 import './Assets/formstyles.css'
 import axios from 'axios'
+import errorpopup from '../Error_popup/error_popup.vue'
 
 export default {
+    components:{
+        errorpopup,
+    },
     data() {
         return {
             user: {
@@ -42,7 +47,8 @@ export default {
                 password: "",
             },
             baseURL: "http://127.0.0.1:8000/api",
-            errors: []
+            errors: "",
+            newerror: false
         };
     },
     methods:{
@@ -53,9 +59,16 @@ export default {
                 localStorage.setItem("sudoku-username", response.data.requestdata);
                 this.$router.push('/');
             } catch (error){
-                this.errors.push(error);
-                console.log(this.errors[this.errors.length]);
+                this.errors = error.response.data.message;
+                this.displaypopup();
             }            
+        },
+        displaypopup(){
+            this.newerror = true;
+            setTimeout(this.closepopup, 4000);
+        },
+        closepopup(){
+            this.newerror = false;
         }
     }
 }

@@ -1,5 +1,6 @@
 <template>
     <div>
+        <errorpopup v-show="newerror" @click="closepopup">{{ error }}</errorpopup>
         <div class="form-position flex-column-center">
             <div class="form-container flex-column-center">
                 <div class="form-heading">
@@ -45,8 +46,12 @@
 <script>
 import axios from 'axios'
 import './Assets/formstyles.css'
+import errorpopup from '../Error_popup/error_popup.vue'
 
 export default {
+    components: {
+        errorpopup,
+    },
     data() {
         return {
             user: {
@@ -56,20 +61,30 @@ export default {
                 password_confirmation: ""
             },
             baseURL: "http://127.0.0.1:8000/api",
-            errors: []
+            error: "",
+            newerror: false,
         }
     },
     methods: {
         async registeruser() {
             try {
                 const response = await axios.post(this.baseURL + '/createUser', this.user);
-                console.log(response);
+                // console.log(response);
             }
             catch (error) {
-                this.errors.push(error);
+                this.error = error.response.data.message;
+                this.displaypopup();
             }
 
             this.$router.push('/login');
+        },
+        displaypopup(){
+            this.newerror = true;
+
+            setTimeout(this.closepopup, 4000);
+        },
+        closepopup(){
+            this.newerror = false;
         }
     }
 }

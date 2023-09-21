@@ -15,19 +15,29 @@
                     <li class="normal-text list-item">A blog with tips, tricks and strategies for improving your sudoku
                         skills.</li>
                 </ul><br><br>
-                <p class="normal-text">Sudoku is a great way to
+                <p class="normal-text">This webiste was maded as a student project to try and implement one of the United
+                    Nations Sustainable
+                    Development Goals(SDG)<br /><br />The goal in mind was specifically
+                    <strong>goal 8.2: to achieve higher levels of economic productivity.</strong>
+                    <br /> <br />
+                    By allowing people to relax and take breaks is a great way of reducing stress and allowing people to
+                    focus much easier. This in the long run increases productivity. Rather than a death march from one
+                    deadline to the next. <br /> <br />
+                    Sudoku is a great way to
                     exercise your brain, relax
                     your mind and have fun. This website is here to support you on your sudoku journey and make it more
                     enjoyable.
                     Join us today and discover the world of sudoku!
+                    <br /><br />
+
                 </p>
+
             </div>
         </div>
     </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
 
 <script>
 import './view_assets/rules_about_styles.css'

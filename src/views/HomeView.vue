@@ -1,29 +1,36 @@
 <template>
     <div id="srctag">
+        <errorpopup v-show="newerror" @click="closepopup">{{ errors }}</errorpopup>
         <div class="home-view flex-center">
             <div class="difficulty-selection flex-center">
                 <div class="option-container flex-center">
-                    <input type="radio" id="easy" name="difficulty" value="0" checked @click="setdifficulty(0)" />
+                    <input type="radio" id="easy" name="difficulty" value="0" v-model="newlevel"
+                        @click="setdifficulty(0)" />
                     <label for="easy">Easy</label>
                 </div>
                 <div class="option-container flex-center">
-                    <input type="radio" id="medium" name="difficulty" value="1"  @click="setdifficulty(1)" />
+                    <input type="radio" id="medium" name="difficulty" value="1" v-model="newlevel"
+                        @click="setdifficulty(1)"/>
                     <label for="medium">Medium</label>
                 </div>
                 <div class="option-container flex-center">
-                    <input type="radio" id="hard" name="difficulty" value="2" @click="setdifficulty(2)" />
+                    <input type="radio" id="hard" name="difficulty" value="2" v-model="newlevel"
+                        @click="setdifficulty(2)" />
                     <label for="hard">Hard</label>
                 </div>
                 <div class="option-container flex-center">
-                    <input type="radio" id="expert" name="difficulty" value="3" @click="setdifficulty(3)" />
+                    <input type="radio" id="expert" name="difficulty" value="3" v-model="newlevel"
+                        @click="setdifficulty(3)" />
                     <label for="expert">Expert</label>
                 </div>
                 <div class="option-container flex-center">
-                    <input type="radio" id="nightmare" name="difficulty" value="4" @click="setdifficulty(4)" />
+                    <input type="radio" id="nightmare" name="difficulty" value="4" v-model="newlevel"
+                        @click="setdifficulty(4)" />
                     <label for="nightmare">Nightmare</label>
                 </div>
                 <div class="option-container flex-center">
-                    <input type="radio" id="robot" name="difficulty" value="5" @click="setdifficulty(5)" />
+                    <input type="radio" id="robot" name="difficulty" value="5" v-model="newlevel"
+                        @click="setdifficulty(5)" />
                     <label for="robot">Robot</label>
                 </div>
             </div>
@@ -38,17 +45,7 @@
                     </div>
                 </div>
             </div>
-            <div class="timer-container flex-center">
-                <span id="minutes" class="header-text time-unit">{{ minutes }}</span>
-                <span class="header-text">:</span>
-                <span id="seconds" class="header-text time-unit">{{ seconds }}</span>
-                <button id="startbutton" @click="starttimer" class="button" :disabled="timer">
-                    <span class="material-symbols-outlined">play_circle</span>
-                </button>
-                <button id="stopbutton" @click="stoptimer" class="button" :disabled="nottimer">
-                    <span class="material-symbols-outlined">pause_circle</span>
-                </button>
-            </div>
+            <timer />
         </div>
     </div>
 </template>
@@ -57,8 +54,14 @@
 import './view_assets/home_styles.css'
 import sudoku from '../assets/sudoku.js'
 import axios from 'axios'
+import errorpopup from '../components/Error_popup/error_popup.vue'
+import timer from '../components/timer/timer.vue'
 
 export default {
+    components:{
+        errorpopup,
+        timer,
+    },
     data() {
         return {
             baseURL: "http://127.0.0.1:8000/api",
@@ -73,11 +76,6 @@ export default {
             board: () => new sudoku(this.boardsize, this.difficulty[5]),
             numberregex: new RegExp(/[1-9]/),
             checklogin: localStorage.getItem("logintoken") ? true : false,
-            minutes: 0,
-            seconds: 0,
-            totaltime: 0,
-            timer: true,
-            nottimer: false,
             gameid: 0,
             recentgame: undefined,
             submitgame: {
@@ -87,7 +85,8 @@ export default {
                 time_taken: 0,
                 completed: false
             },
-            errors: [],
+            errors: "",
+            newerror: false,
 
         }
     },
@@ -106,8 +105,6 @@ export default {
             this.board = new sudoku(this.boardsize, this.difficulty[level]);
             this.newlevel = level;
             this.board.createboard();
-
-            console.log(this.checklogin);
 
             if (this.checklogin)
                 this.createsudoku();
@@ -134,33 +131,10 @@ export default {
                 gridcell[0].classList.add("cell-transition");
             }
 
-            if(this.checklogin)
+            if (this.checklogin)
                 this.updatesudoku();
         },
-        //function for the timer
-        stopwatch() {
-            if (this.timer) {
-                this.seconds++;
-                this.totaltime++;
-                if (this.seconds === 60) {
-                    this.minutes++;
-                    this.seconds = 0;
-                }
-
-                setTimeout(this.stopwatch, 1000)
-            }
-        },
-        starttimer() {
-            this.timer = true;
-            this.nottimer = false;
-            this.stopwatch();
-        },
-        stoptimer() {
-            this.timer = false;
-            this.nottimer = true;
-            if(this.checklogin)
-                this.updatesudoku();
-        },
+        //function to get the most recent game played from the database for the user
         async getrecentgame() {
             try {
                 const response = await axios.get(this.baseURL + "/getRecentGame", { headers: this.headers });
@@ -173,11 +147,13 @@ export default {
                 this.minutes = (this.totaltime - (this.totaltime % 60)) / 60;
                 this.gameid = this.recentgame.id;
             } catch (error) {
-                this.errors.push(error);
+                this.errors = error.response.data.message;
+                this.displaypopup();
                 this.board.createboard();
                 this.createsudoku();
             }
         },
+        //this function loads the details into the submit game vairable
         submitgamedata() {
             this.submitgame.boards = this.board.gridtostring();
             this.submitgame.completed = this.board.checkcomplete();
@@ -185,6 +161,7 @@ export default {
             this.submitgame.difficulty = this.newlevel;
             this.submitgame.id = this.gameid;
         },
+        //function to make a new record in the database for a sudoku board
         async createsudoku() {
             this.submitgamedata();
 
@@ -192,24 +169,26 @@ export default {
                 const response = await axios.post(this.baseURL + '/createSudoku', this.submitgame, { headers: this.headers });
                 this.gameid = response.data.requestdata.id;
             } catch (error) {
-                this.errors.push(error);
+                this.errors = error.response.data.message;
+                this.displaypopup();
             }
         },
+        //function to update the database record, the function runs whenever the user enters a new number in the board
         async updatesudoku() {
             this.submitgamedata();
             try {
                 const response = await axios.put(this.baseURL + '/updateSudoku', this.submitgame, { headers: this.headers });
                 // console.log(response.data.requestdata);
             } catch (error) {
-                this.errors.push(error);
+                this.errors = error.response.data.message;
+                this.displaypopup();
             }
-        }
+        },
     },
     mounted() {
+        //this sets up the site to make cells containing initail clues readonly
         const gridcells = document.getElementsByClassName("grid-cell");
-
         let k;
-
         //this loop sets all the preset numbers to readonly to prevent them from changing 
         for (let i = 0; i < gridcells.length; i++) {
             if (gridcells[i].value >= 1 && gridcells[i] <= 9)
@@ -230,10 +209,6 @@ export default {
                 }
             }
         }
-
-        
-
-        this.stopwatch();
     }
 }
 </script>
