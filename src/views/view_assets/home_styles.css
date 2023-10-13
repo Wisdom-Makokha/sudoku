@@ -72,7 +72,6 @@ input[type="radio"] {
     height: 5em;
     max-width: 5em;
     caret-color: transparent;
-    background-color: #ffffff;
 }
 
 
@@ -91,6 +90,11 @@ input[type="radio"] {
     cursor: pointer;
     font-size: 250%;
     font-family: 'Montserrat', sans-serif;
+    background-color: #ffffff;
+}
+
+.cell-color{
+    color: #1b67da;
 }
 
 .row {

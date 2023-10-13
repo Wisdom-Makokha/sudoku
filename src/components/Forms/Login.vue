@@ -57,7 +57,9 @@ export default {
                 const response = await axios.post(this.baseURL + '/userLogin', this.user);
                 localStorage.setItem("logintoken", response.data.token);
                 localStorage.setItem("sudoku-username", response.data.requestdata);
-                this.$router.push('/');
+                this.$router.go(this.$router.currentRoute);
+                this.$router.push("/");
+                
             } catch (error){
                 this.errors = error.response.data.message;
                 this.displaypopup();

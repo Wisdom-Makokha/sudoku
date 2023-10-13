@@ -20,8 +20,6 @@ export default {
         return {
             minutes: 0,
             seconds: 0,
-            minstrings: "",
-            secstrings: "",
             totaltime: 0,
             timer: true,
             pausetimer: false,

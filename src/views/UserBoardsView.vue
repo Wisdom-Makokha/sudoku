@@ -4,9 +4,9 @@
         <div v-if="zeroboards" class="not-found">
             <p class="normal-text">No boards here</p>
         </div>
-        <div v-else>
-            <span>{{ difficulty[board.difficulty] }}</span>
-            <span>{{ board.time_taken }}</span>
+        <div v-else class="board-details">
+            <span class="board-text difficulty">{{ difficulty[board.difficulty] }}</span>
+            <span class="board-text time">{{ board.time_taken }}</span>
         </div>
     </div>
   </div>
@@ -52,5 +52,14 @@ export default {
 </script>
 
 <style>
+.board-text{
+    font-size: 200%
+}
 
+.board-details{
+    padding: 0.9em 3em;
+    border: 1px solid;
+    margin: 6px 0px;
+    border-radius: 10px;
+}
 </style>

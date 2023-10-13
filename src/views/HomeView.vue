@@ -38,7 +38,7 @@
                 <div class="table">
                     <div class="row flex-center" v-for="row in boardsize" :key="row">
                         <div class="column flex-center" v-for="column in boardsize" :key="column">
-                            <span class="cell"><input type="text" maxlength="1" class="grid-cell cell-transition"
+                            <span class="cell"><input type="text" maxlength="1" class="grid-cell cell-transition cell-color"
                                     @input="validatevalue(row, column)"
                                     v-model="board.sudokugrid[row - 1][column - 1]"></span>
                         </div>
@@ -184,6 +184,13 @@ export default {
                 this.displaypopup();
             }
         },
+        displaypopup(){
+            this.newerror = true;
+            setTimeout(this.closepopup, 4000);
+        },
+        closepopup(){
+            this.newerror = false;
+        }
     },
     mounted() {
         //this sets up the site to make cells containing initail clues readonly
@@ -191,7 +198,7 @@ export default {
         let k;
         //this loop sets all the preset numbers to readonly to prevent them from changing 
         for (let i = 0; i < gridcells.length; i++) {
-            if (gridcells[i].value >= 1 && gridcells[i] <= 9)
+            if (gridcells[i].value >= 1 && gridcells[i].value <= 9)
                 gridcells[i].setAttribute("readonly", "");
         }
 
@@ -208,6 +215,13 @@ export default {
                     gridcells[k].classList.add("cell-transition");
                 }
             }
+        }
+
+        const readonlycells = document.querySelectorAll("input[readonly]");
+
+        for(let i = 0; i < readonlycells.length; i++)
+        {
+            readonlycells[i].classList.remove("cell-color");
         }
     }
 }

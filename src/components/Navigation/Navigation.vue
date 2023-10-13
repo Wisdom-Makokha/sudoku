@@ -65,6 +65,8 @@ export default {
                 localStorage.removeItem("logintoken");
                 localStorage.removeItem("sudoku-username");
                 this.$router.push("/");
+                this.$router.go(this.$router.currentRoute);
+                
             } catch(error) {
                 this.errors.push(error);
             }
